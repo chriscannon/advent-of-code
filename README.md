@@ -1,5 +1,7 @@
 # Advent of Code 2018
-Some programming fun over the holiday season.
+Some programming fun over the holiday season. I am *positive* I will never crack the top 100 leaderboard so my only
+goal is to learn more about Python and in general writing optimal code using appropriate data structures
+and techniques.
 
 ## Lesson's Learned
 Day 1:
