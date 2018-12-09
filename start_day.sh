@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 DAY=$1
 
 mkdir $1
