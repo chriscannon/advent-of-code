@@ -34,7 +34,7 @@ Day 8:
 * If you're not using the value in a `for ... range()` call use an underscore.
 
 Day 9:
-* Whenever you're iterating in a circular fashion `deque` is probably a good choice. It has much better big-Oh complexity than the built-in list.
+* Whenever you're iterating in a circular fashion `deque` is probably a good choice. It has much better Big-O complexity than the built-in list.
 * If you need a list with better performance `blist` is also an option.
 * Automate what you can to avoid mistakes. For example, I automated the creation of a new day by having a script that downloads the
 input file and copies my Python starter template into the directory.
