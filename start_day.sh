@@ -9,7 +9,7 @@ if [ -z "$SESSION" ]
 then
     echo "\$SESSION environment variable is not set so the day's input will not be retrieved."
 else
-    curl https://adventofcode.com/2018/day/$DAY/input --cookie "session=$SESSION" > $1/input.txt
+    curl --silent https://adventofcode.com/2018/day/$DAY/input --cookie "session=$SESSION" > $1/input.txt
 fi
 
 echo "New day initialized under $DAY/"
