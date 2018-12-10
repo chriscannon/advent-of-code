@@ -10,6 +10,12 @@ Day 1:
 Day 2:
 * Enumerate is your friend. Use it instead of `range` where appropriate.
 
+Day 3:
+* A tuple can be used as a key for a dictionary (e.g., `mydict[1, 2]`).
+
+Day 4:
+* Use the `most_common()` function on the `Counter` class to get a sorted list in descending order.
+
 Day 5:
 * To check if letters are the same except for case check that they're equivalent when lowercase and not equivalent as they are.
 * You don't really need to iterate over the alphabet if your input contains the alphabet. All you have to do is lower the string and then get the unique characters using `set()`.
@@ -20,6 +26,7 @@ Day 6:
 
 Day 7:
 * To get the dependencies of a graph build the graph as you normally would with a dictionary with lists as values but in reverse.
+* Use `itertools.count()` in a loop to create a generator of incrementing integers.
 
 Day 8:
 * When dealing with trees recursion is likely going to be a good fit.
