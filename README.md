@@ -9,6 +9,7 @@ Day 1:
 
 Day 2:
 * Enumerate is your friend. Use it instead of `range` where appropriate.
+* To get the lines in a file as a list with newlines removed used `f.read().splitlines()`.
 
 Day 3:
 * A tuple can be used as a key for a dictionary (e.g., `mydict[1, 2]`).
