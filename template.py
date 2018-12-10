@@ -5,7 +5,7 @@ import sys
 
 
 def main(filename):
-    """Parse the input file and output the results"""
+    """Parse the input file and output the results."""
     with open(filename) as f:
         pass
 
