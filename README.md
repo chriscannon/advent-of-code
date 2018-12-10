@@ -15,6 +15,7 @@ Day 3:
 
 Day 4:
 * Use the `most_common()` function on the `Counter` class to get a sorted list in descending order.
+* Instead of using a generator to instantiate a list of literals (`['.' for _ in range(10)]`) you can use a m
 
 Day 5:
 * To check if letters are the same except for case check that they're equivalent when lowercase and not equivalent as they are.
