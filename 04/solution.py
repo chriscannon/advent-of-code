@@ -22,7 +22,7 @@ def main(filename):
 
 def compute_guard_and_sleep(ordered):
     """Compute sleep minutes and guard total sleep time."""
-    sleep = defaultdict(lambda: ["."] * 60)
+    sleep = defaultdict(lambda: ["." for _ in range(60)])
     guards = defaultdict(int)
     guard = None
     start = None
