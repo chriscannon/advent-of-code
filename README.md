@@ -3,6 +3,9 @@ Some programming fun over the holiday season. I am *positive* I will never crack
 goal is to learn more about Python and in general writing optimal code using appropriate data structures
 and techniques.
 
+## Requirements
+* Python 3.7
+
 ## Lesson's Learned
 Day 1:
 * Calling `int()` on a string will parse positive and negative numbers.
@@ -40,6 +43,9 @@ Day 9:
 * If you need a list with better performance `blist` is also an option.
 * Automate what you can to avoid mistakes. For example, I automated the creation of a new day by having a script that downloads the
 input file and copies my Python starter template into the directory.
+
+Day 10:
+* To assign the highest possible value to a variable use `float('inf')` to assign the lowest possible value to a variable use `float('-inf')`.
 
 Day 11:
 * List comprehensions can be chained together (e.g., `[x+y for x in range(10) for y in range(20)]`).
