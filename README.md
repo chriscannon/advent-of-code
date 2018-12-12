@@ -19,7 +19,7 @@ Day 3:
 
 Day 4:
 * Use the `most_common()` function on the `Counter` class to get a sorted list in descending order.
-* Instead of using a generator to instantiate a list of literals (`['.' for _ in range(10)]`) you can use multiplication (`['.'] * 10` for a single list or `[['.'] * 10] * 10` for 2D lists).
+* ~~Instead of using a generator to instantiate a list of literals (`['.' for _ in range(10)]`) you can use multiplication (`['.'] * 10` for a single list or `[['.'] * 10] * 10` for 2D lists).~~ Actually this is a really bad idea because everything in Python is a reference and when you multiply a list you're making references instead of individual copies which is precisely what you do not want for a matrix. Used chained generators instead.
 
 Day 5:
 * To check if letters are the same except for case check that they're equivalent when lowercase and not equivalent as they are.
