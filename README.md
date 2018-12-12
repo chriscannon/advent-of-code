@@ -16,7 +16,7 @@ Day 3:
 
 Day 4:
 * Use the `most_common()` function on the `Counter` class to get a sorted list in descending order.
-* Instead of using a generator to instantiate a list of literals (`['.' for _ in range(10)]`) you can use a m
+* Instead of using a generator to instantiate a list of literals (`['.' for _ in range(10)]`) you can use multiplication (`['.'] * 10` for a single list or `[['.'] * 10] * 10` for 2D lists).
 
 Day 5:
 * To check if letters are the same except for case check that they're equivalent when lowercase and not equivalent as they are.
@@ -40,3 +40,7 @@ Day 9:
 * If you need a list with better performance `blist` is also an option.
 * Automate what you can to avoid mistakes. For example, I automated the creation of a new day by having a script that downloads the
 input file and copies my Python starter template into the directory.
+
+Day 11:
+* List comprehensions can be chained together (e.g., `[x+y for x in range(10) for y in range(20)]`).
+* The `//` operator does floor division.
