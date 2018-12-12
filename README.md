@@ -44,6 +44,9 @@ Day 9:
 * Automate what you can to avoid mistakes. For example, I automated the creation of a new day by having a script that downloads the
 input file and copies my Python starter template into the directory.
 
+Day 10:
+* To assign the highest possible value to a variable use `float('inf')` to assign the lowest possible value to a variable use `float('-inf')`.
+
 Day 11:
 * List comprehensions can be chained together (e.g., `[x+y for x in range(10) for y in range(20)]`).
 * The `//` operator does floor division.
