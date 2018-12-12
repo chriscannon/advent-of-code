@@ -43,3 +43,4 @@ input file and copies my Python starter template into the directory.
 
 Day 11:
 * List comprehensions can be chained together (e.g., `[x+y for x in range(10) for y in range(20)]`).
+* The `//` operator does floor division.
