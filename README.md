@@ -50,3 +50,7 @@ Day 10:
 Day 11:
 * List comprehensions can be chained together (e.g., `[x+y for x in range(10) for y in range(20)]`).
 * The `//` operator does floor division.
+
+Day 14:
+* `divmod` can be used to divide two numbers and get the quotient and remainder returned as a tuple.
+* To circle through a list when the index grows larger than the list size mod it by the length of the list (e.g., `index % len(l)`).
