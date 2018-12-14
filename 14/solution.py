@@ -24,6 +24,8 @@ def main(filename):
         elf2_i = (elf2_r + 1 + elf2_i) % len(score)
         # show_score(score, elf1_i, elf2_i)
     print(''.join(map(str, score[recipes:recipes+10])))
+    loc = ''.join(score).find(str(recipes))
+    print(''.join(map(str, score[loc-5:loc])))
 
 
 def show_score(score, elf1, elf2):
