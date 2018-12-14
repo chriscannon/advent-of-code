@@ -1,9 +1,11 @@
 """
 Day 14 Advent of Code 2018
 """
+import itertools
 import sys
 
 RECIPE_LOOK_AHEAD = 5
+
 
 def main(filename):
     """Parse the input file and output the results."""
@@ -12,23 +14,26 @@ def main(filename):
     score = [3, 7]
     elf1_i, elf2_i = 0, 1
 
-    # show_score(score, elf1_i, elf2_i)
-
-    # recipes = 2018
-    for i in range(recipes + RECIPE_LOOK_AHEAD + 1):
+    for i in itertools.count(0):
         elf1_r, elf2_r = score[elf1_i], score[elf2_i]
-        sum = score[elf1_i] + score[elf2_i]
-        for d in str(sum):
+        sum_ = score[elf1_i] + score[elf2_i]
+        for d in str(sum_):
             score.append(int(d))
         elf1_i = (elf1_r + 1 + elf1_i) % len(score)
         elf2_i = (elf2_r + 1 + elf2_i) % len(score)
-        # show_score(score, elf1_i, elf2_i)
-    print(''.join(map(str, score[recipes:recipes+10])))
-    loc = ''.join(score).find(str(recipes))
-    print(''.join(map(str, score[loc-5:loc])))
+
+        if i == (recipes + RECIPE_LOOK_AHEAD + 1):
+            sequence = ''.join(map(str, score[recipes:recipes + 10]))
+            print(f'Part 1 ten recipes after puzzle input: {sequence}')
+
+        if str(recipes) in ''.join(map(str, score[-7:])):
+            recipes_before = ''.join(map(str, score)).index(str(recipes))
+            print(f'Part 2 # of recipes before the puzzle input: {recipes_before}')
+            break
 
 
 def show_score(score, elf1, elf2):
+    """Helper function to output the score board."""
     out = []
     for i, s in enumerate(score):
         if i == elf1:
