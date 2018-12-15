@@ -54,3 +54,4 @@ Day 11:
 Day 14:
 * `divmod` can be used to divide two numbers and get the quotient and remainder returned as a tuple.
 * To circle through a list when the index grows larger than the list size mod it by the length of the list (e.g., `index % len(l)`).
+* [py-spy](https://github.com/benfred/py-spy) is a helpful tool for profiling python applications as they are running without modifying the code.
