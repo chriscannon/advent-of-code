@@ -4,31 +4,31 @@ Day 14 Advent of Code 2018
 import itertools
 import sys
 
-RECIPE_LOOK_AHEAD = 5
-
 
 def main(filename):
     """Parse the input file and output the results."""
     with open(filename) as f:
         recipes = int(f.read().strip())
     score = [3, 7]
-    elf1_i, elf2_i = 0, 1
+    index1, index2 = 0, 1
+    recipes_look_ahead = recipes + 5 + 1
+    recipes_length = len(str(recipes)) + 1
+    recipes_str = str(recipes)
 
     for i in itertools.count(0):
-        elf1_r, elf2_r = score[elf1_i], score[elf2_i]
-        sum_ = score[elf1_i] + score[elf2_i]
-        for d in str(sum_):
-            score.append(int(d))
-        elf1_i = (elf1_r + 1 + elf1_i) % len(score)
-        elf2_i = (elf2_r + 1 + elf2_i) % len(score)
+        val1, val2 = score[index1], score[index2]
+        sum_ = val1 + val2
+        score.extend(divmod(sum_, 10) if sum_ >= 10 else (sum_,))
+        index1 = (val1 + 1 + index1) % len(score)
+        index2 = (val2 + 1 + index2) % len(score)
 
-        if i == (recipes + RECIPE_LOOK_AHEAD + 1):
+        if i == recipes_look_ahead:
             sequence = ''.join(map(str, score[recipes:recipes + 10]))
             print(f'Part 1 ten recipes after puzzle input: {sequence}')
 
-        if str(recipes) in ''.join(map(str, score[-7:])):
-            recipes_before = ''.join(map(str, score)).index(str(recipes))
-            print(f'Part 2 # of recipes before the puzzle input: {recipes_before}')
+        if recipes_str == ''.join(map(str, score[-recipes_length:-1])):
+            recipes_before = len(score) - len(str(recipes)) - 1
+            print(f'Part 2 number of recipes before the puzzle input: {recipes_before}')
             break
 
 
