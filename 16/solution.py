@@ -7,195 +7,168 @@ import sys
 def main(filename):
     """Parse the input file and output the results."""
     with open(filename) as f:
-        instructions = []
-        instruction = []
         parts = f.read().split("\n\n\n\n")
-        samples = list(filter(None, parts[0].split("\n")))
-        program = list(filter(None, parts[1].split("\n")))
 
-        for s in samples:
-            if s.startswith('Before:'):
-                instruction.append(eval(s.split(': ')[1]))
-            elif s.startswith('After:'):
-                instruction.append(eval(s.split(': ')[1]))
-                instructions.append(instruction)
-                instruction = []
-            else:
-                instruction.append(list(map(int, s.split(' '))))
+    samples = list(filter(None, parts[0].split("\n")))
+    program = list(filter(None, parts[1].split("\n")))
+    operations = [addr, addi, mulr, muli, banr, bani,
+                  borr, bori, setr, seti, gtir, gtri,
+                  gtrr, eqir, eqri, eqrr]
+    sample_instructions = parse_samples(samples)
+    sum_ops = sum_triplicate_instructions(sample_instructions, operations)
+    print(f"Part 1 number of more than 3 possible op codes: {sum_ops}")
 
-        total = 0
+    mapping = find_opcode_mapping(sample_instructions, operations)
+    registers = execute_program(program, mapping)
+    print(f"Part 2 value of first register after executing the program: {registers[0]}")
+    return 0
+
+
+def parse_samples(samples):
+    """Parse the sample inputs and outputs."""
+    instructions = []
+    instruction = []
+    for s in samples:
+        if s.startswith('Before:'):
+            instruction.append(eval(s.split(': ')[1]))
+        elif s.startswith('After:'):
+            instruction.append(eval(s.split(': ')[1]))
+            instructions.append(instruction)
+            instruction = []
+        else:
+            instruction.append(list(map(int, s.split(' '))))
+    return instructions
+
+
+def sum_triplicate_instructions(instructions, operations):
+    """Get the total number of all opcodes that could be 3 or more."""
+    total = 0
+    for (before, instruction, after) in instructions:
+        possible_opcodes = find_opcodes(before, instruction, after, operations)
+        if len(possible_opcodes) >= 3:
+            total += 1
+    return total
+
+
+def find_opcode_mapping(instructions, operations):
+    """Find the opcode mapping by eliminating possibilities where the possible opcode is 1."""
+    opcode_to_func = {}
+    for _ in range(16):
         for (before, instruction, after) in instructions:
-            possible_opcodes = find_opcodes(before, instruction, after)
-            if len(possible_opcodes) > 2:
-                total += 1
-
-        print(f"Part 1 number of more than 3 possible op codes: {total}")
-
-        opcode_to_func = {}
-        for _ in range(16):
-            for (before, instruction, after) in instructions:
-                possible_opcodes = find_opcodes(before, instruction, after)
-                eliminated_opcodes = [o for o in possible_opcodes if o not in opcode_to_func.values()]
-                if len(eliminated_opcodes) == 1 and instruction[0] not in opcode_to_func:
-                    opcode_to_func[instruction[0]] = eliminated_opcodes[0]
-
-        registers = [0, 0, 0, 0]
-        for instruction in program:
-            op, a, b, c = map(int, instruction.split(' '))
-            registers = opcode_to_func[op](registers, a, b, c)
-        print(f"Part 2 value of first register after executing program: {registers[0]}")
+            possible_opcodes = find_opcodes(before, instruction, after, operations)
+            eliminated_opcodes = [o for o in possible_opcodes if o not in opcode_to_func.values()]
+            if len(eliminated_opcodes) == 1 and instruction[0] not in opcode_to_func:
+                opcode_to_func[instruction[0]] = eliminated_opcodes[0]
+    return opcode_to_func
 
 
-def find_opcodes(before, instruction, after):
+def execute_program(program, opcode_to_func):
+    """Execute the program line by line."""
+    registers = [0, 0, 0, 0]
+    for instruction in program:
+        op, a, b, c = map(int, instruction.split(' '))
+        registers = execute_cmd(opcode_to_func[op], registers, a, b, c)
+    return registers
+
+
+def find_opcodes(before, instruction, after, operations):
+    """Finds the possible opcodes for a sample."""
     op_code, a, b, c = instruction[:]
     found = []
 
-    if addr(before, a, b, c) == after:
-        found.append(addr)
-
-    if addi(before, a, b, c) == after:
-        found.append(addi)
-
-    if mulr(before, a, b, c) == after:
-        found.append(mulr)
-
-    if muli(before, a, b, c) == after:
-        found.append(muli)
-
-    if banr(before, a, b, c) == after:
-        found.append(banr)
-
-    if bani(before, a, b, c) == after:
-        found.append(bani)
-
-    if borr(before, a, b, c) == after:
-        found.append(borr)
-
-    if bori(before, a, b, c) == after:
-        found.append(bori)
-
-    if setr(before, a, b, c) == after:
-        found.append(setr)
-
-    if seti(before, a, b, c) == after:
-        found.append(seti)
-
-    if gtir(before, a, b, c) == after:
-        found.append(gtir)
-
-    if gtri(before, a, b, c) == after:
-        found.append(gtri)
-
-    if gtrr(before, a, b, c) == after:
-        found.append(gtrr)
-
-    if eqir(before, a, b, c) == after:
-        found.append(eqir)
-
-    if eqri(before, a, b, c) == after:
-        found.append(eqri)
-
-    if eqrr(before, a, b, c) == after:
-        found.append(eqrr)
+    for o in operations:
+        if execute_cmd(o, before, a, b, c) == after:
+            found.append(o)
 
     return found
 
 
-def addr(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] + after[b]
+def execute_cmd(cmd, registers, a, b, c):
+    """Executes a command on the registers."""
+    after = registers[:]
+    after[c] = cmd(after, a, b)
     return after
 
 
-def addi(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] + b
-    return after
+def addr(registers, a, b):
+    """Addr command."""
+    return registers[a] + registers[b]
 
 
-def mulr(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] * after[b]
-    return after
+def addi(registers, a, b):
+    """Addi command."""
+    return registers[a] + b
 
 
-def muli(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] * b
-    return after
+def mulr(registers, a, b):
+    """Mulr command."""
+    return registers[a] * registers[b]
 
 
-def banr(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] & after[b]
-    return after
+def muli(registers, a, b):
+    """Muli command."""
+    return registers[a] * b
 
 
-def bani(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] & b
-    return after
+def banr(registers, a, b):
+    """Banr command."""
+    return registers[a] & registers[b]
 
 
-def borr(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] | after[b]
-    return after
+def bani(registers, a, b):
+    """Bani command."""
+    return registers[a] & b
 
 
-def bori(registers, a, b, c):
-    after = registers[::]
-    after[c] = after[a] | b
-    return after
+def borr(registers, a, b):
+    """Borr command."""
+    return registers[a] | registers[b]
 
 
-def setr(registers, a, _, c):
-    after = registers[::]
-    after[c] = after[a]
-    return after
+def bori(registers, a, b):
+    """Bori command."""
+    return registers[a] | b
 
 
-def seti(registers, a, _, c):
-    after = registers[::]
-    after[c] = a
-    return after
+def setr(registers, a, _):
+    """Setr command."""
+    return registers[a]
 
 
-def gtir(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(a > after[b])
-    return after
+def seti(_, a, __):
+    """Seti command."""
+    return a
 
 
-def gtri(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(after[a] > b)
-    return after
+def gtir(registers, a, b):
+    """Gtir command."""
+    return bool(a > registers[b])
 
 
-def gtrr(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(after[a] > after[b])
-    return after
+def gtri(registers, a, b):
+    """Gtri command."""
+    return bool(registers[a] > b)
 
 
-def eqir(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(a == after[b])
-    return after
+def gtrr(registers, a, b):
+    """Gtrr command."""
+    return bool(registers[a] > registers[b])
 
 
-def eqri(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(after[a] == b)
-    return after
+def eqir(registers, a, b):
+    """Eqir command."""
+    return bool(a == registers[b])
 
 
-def eqrr(registers, a, b, c):
-    after = registers[::]
-    after[c] = bool(after[a] == after[b])
-    return after
+def eqri(registers, a, b):
+    """Eqri command."""
+    return bool(registers[a] == b)
+
+
+def eqrr(registers, a, b):
+    """Eqrr command."""
+    return bool(registers[a] == registers[b])
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    sys.exit(main(sys.argv[1]))
