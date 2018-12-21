@@ -1,4 +1,4 @@
-# Advent of Code 2018
+# Advent of Code
 Some programming fun over the holiday season. I am *positive* I will never crack the top 100 leaderboard so my only
 goal is to learn more about Python and in general writing optimal code using appropriate data structures
 and techniques.
@@ -7,6 +7,8 @@ and techniques.
 * Python 3.7
 
 ## Lesson's Learned
+
+### 2018
 Day 1:
 * Calling `int()` on a string will parse positive and negative numbers.
 
