@@ -1,4 +1,4 @@
-# Advent of Code 2018
+# Advent of Code
 Some programming fun over the holiday season. I am *positive* I will never crack the top 100 leaderboard so my only
 goal is to learn more about Python and in general writing optimal code using appropriate data structures
 and techniques.
@@ -7,6 +7,8 @@ and techniques.
 * Python 3.7
 
 ## Lesson's Learned
+
+### 2018
 Day 1:
 * Calling `int()` on a string will parse positive and negative numbers.
 
@@ -55,3 +57,16 @@ Day 14:
 * `divmod` can be used to divide two numbers and get the quotient and remainder returned as a tuple.
 * To circle through a list when the index grows larger than the list size mod it by the length of the list (e.g., `index % len(l)`).
 * [py-spy](https://github.com/benfred/py-spy) is a helpful tool for profiling python applications as they are running without modifying the code.
+
+Day 16:
+* It's possible to store functions as a reference in a data structure (list, dict, etc.). For example:
+```
+>>> def p(a):
+...     print(a)
+...
+>>> l = [p]
+>>> l[0]('hello')
+hello
+```
+* There's a python module called [fileinput](https://docs.python.org/3.7/library/fileinput.html) that can read from stdin or a command line argument line by line. This is very  helpful in removing some of the boiler plate that goes along with `sys.argv`.
+* In your `__init__` method which calls a `main()` function wrap it with `sys.exit()` so that you can have your main function control the status code when it exits. By default have the main function `return 0`.
