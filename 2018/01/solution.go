@@ -34,26 +34,20 @@ func main() {
 	}
 	fmt.Println("Part 1 resulting frequency: ", currentFrequency)
 
-	visited := make(map[int64]bool)
 	currentFrequency = 0
+	visited := make(map[int64]bool)
 	visited[currentFrequency] = true
-	foundDuplicate := false
 
-	var duplicatedFrequency int64
-
-	for !foundDuplicate {
+	for {
 		for _, change := range frequencyChanges {
 			currentFrequency += change
 
 			if visited[currentFrequency] {
-				foundDuplicate = true
-				duplicatedFrequency = currentFrequency
-				break
+				fmt.Println("Part 2 first duplicated frequency: ", currentFrequency)
+				return
 			}
 
 			visited[currentFrequency] = true
 		}
 	}
-
-	fmt.Println("Part 2 first duplicated frequency: ", duplicatedFrequency)
 }
