@@ -8,7 +8,7 @@ and techniques.
 
 ## Lesson's Learned
 
-### 2018
+### 2018 in Python
 Day 1:
 * Calling `int()` on a string will parse positive and negative numbers.
 
@@ -70,3 +70,9 @@ hello
 ```
 * There's a python module called [fileinput](https://docs.python.org/3.7/library/fileinput.html) that can read from stdin or a command line argument line by line. This is very  helpful in removing some of the boiler plate that goes along with `sys.argv`.
 * In your `__init__` method which calls a `main()` function wrap it with `sys.exit()` so that you can have your main function control the status code when it exits. By default have the main function `return 0`.
+
+### 2018 in Golang
+Day 1:
+* The `int` datatype in Go can change based upon the platform they run on so it's important to be explicit.
+Typically choosing `int64` is best.
+
