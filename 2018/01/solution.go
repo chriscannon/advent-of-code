@@ -55,6 +55,5 @@ func main() {
 		}
 	}
 
-
 	fmt.Println("Part 2 first duplicated frequency: ", duplicatedFrequency)
 }
