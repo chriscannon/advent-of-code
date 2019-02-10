@@ -1,10 +1,11 @@
 # Advent of Code
 Some programming fun over the holiday season. I am *positive* I will never crack the top 100 leaderboard so my only
-goal is to learn more about Python and in general writing optimal code using appropriate data structures
+goal is to learn more about Python/Go and in general writing optimal code using appropriate data structures
 and techniques.
 
 ## Requirements
 * Python 3.7
+* Go 1.11
 
 ## Lesson's Learned
 
@@ -73,6 +74,5 @@ hello
 
 ### 2018 in Golang
 Day 1:
-* The `int` datatype in Go can change based upon the platform they run on so it's important to be explicit.
-Typically choosing `int64` is best.
+* The `int` datatype in Go can change based upon the platform they run on so it's important to be explicit (declare variables as `int64` instead of `int`).
 
