@@ -16,7 +16,7 @@ fi
 
 mkdir $DIR
 touch $DIR/sample.txt
-cat template.py | sed "s/REPLACE/$DAY/g" > $DIR/solution.py
+cat template.go | sed "s/REPLACE/$DAY/g" > $DIR/main.go
 curl --silent https://adventofcode.com/$YEAR/day/$DAY/input --cookie "session=$SESSION" > $DIR/input.txt
 
 echo "New day initialized under $DIR/"
