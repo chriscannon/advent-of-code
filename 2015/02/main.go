@@ -1,14 +1,18 @@
-// Day REPLACE_DAY Advent of Code REPLACE_YEAR
+// Day 2 Advent of Code 2015
 package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 )
 
 func main() {
 	input := readInput(os.Args[1])
+	for i := range input{
+		fmt.Println(input[i])
+	}
 }
 
 func readInput(fileName string) []string {
