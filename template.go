@@ -9,20 +9,25 @@ import (
 )
 
 func main() {
-	input := readInput(os.Args[1])
+	input := readInput()
 }
 
-func readInput(fileName string) []string {
-	inputFile, err := os.Open(fileName)
-	if err != nil {
-		log.Panicln("error opening file: ", err)
-	}
-
-	defer func(){
-		if err := inputFile.Close(); err != nil {
-			log.Panicln("error closing file: ", err)
+func readInput() []string {
+	var inputFile *os.File
+	if len(os.Args) == 2 {
+		var openErr error
+		inputFile, openErr = os.Open(os.Args[1])
+		if openErr != nil {
+			log.Panicln("error opening file: ", openErr)
 		}
-	}()
+		defer func() {
+			if err := inputFile.Close(); err != nil {
+				log.Panicln("error closing file: ", err)
+			}
+		}()
+	} else {
+		inputFile = os.Stdin
+	}
 
 	var lines []string
 	scanner := bufio.NewScanner(inputFile)
