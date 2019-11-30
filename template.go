@@ -1,4 +1,5 @@
-// Day REPLACE_DAY Advent of Code REPLACE_YEAR
+// Day $DAY Advent of Code $YEAR
+// https://adventofcode.com/$YEAR/day/$DAY
 package main
 
 import (

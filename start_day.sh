@@ -1,4 +1,6 @@
 #!/bin/bash
+# Example command: ./start_day.sh 2019 01
+set -e
 if [ -z "$SESSION" ]
 then
     echo "Set the \$SESSION environment variable."
@@ -7,16 +9,10 @@ fi
 
 YEAR=$1
 DAY=$2
+DIR="$YEAR/$(printf "%02d" "$DAY")"
 
-if [ $DAY -lt 10 ]; then
-    DIR="$YEAR/0$DAY";
-else
-    DIR="$YEAR/$DAY";
-fi
-
-mkdir $DIR
-touch $DIR/sample.txt
-cat template.go | sed "s/REPLACE_DAY/$DAY/g" | sed "s/REPLACE_YEAR/$YEAR/g" > $DIR/main.go
-curl --silent https://adventofcode.com/$YEAR/day/$DAY/input --cookie "session=$SESSION" > $DIR/input.txt
+mkdir "$DIR"
+sed -e "s/\$DAY/$DAY/g" -e "s/\$YEAR/$YEAR/g" template.go > "$DIR/main.go"
+curl --fail "https://adventofcode.com/$YEAR/day/$DAY/input" --cookie "session=$SESSION" > "$DIR/input.txt"
 
 echo "New day initialized under $DIR/"

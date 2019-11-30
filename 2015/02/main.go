@@ -1,18 +1,15 @@
 // Day 2 Advent of Code 2015
+// https://adventofcode.com/2015/day/2
 package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 )
 
 func main() {
 	input := readInput(os.Args[1])
-	for i := range input{
-		fmt.Println(input[i])
-	}
 }
 
 func readInput(fileName string) []string {
