@@ -17,14 +17,14 @@ func main() {
 		mass, err := strconv.Atoi(input[i])
 
 		if err != nil {
-			log.Fatalf("failed to convert '%s' to int: %v", input[i], err)
+			log.Fatalf("failed to convert '%s' to int: %v\n", input[i], err)
 		}
 
 		totalRecurse += recurseFuel(mass)
 		total += calculateFuel(mass)
 	}
-	fmt.Printf("Part 1 total fuel: %d\n", total)
-	fmt.Printf("Part 2 total fuel recursive: %d\n", totalRecurse)
+	fmt.Println("Part 1 total fuel: ", total)
+	fmt.Println("Part 2 total fuel recursive: ", totalRecurse)
 }
 
 func calculateFuel(mass int) int {

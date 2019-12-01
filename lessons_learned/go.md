@@ -9,3 +9,7 @@ when an error occurs `log.Panic` is a good choice because it unwinds the program
 ## 2018
 ### Day 1
 * The `int` datatype in Go can change based upon the platform they run on so it's important to be explicit (declare variables as `int64` instead of `int`).
+
+## 2019
+### Day 1
+* By default go's `/` operator does floor division.
