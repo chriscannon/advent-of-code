@@ -11,7 +11,7 @@ YEAR=$1
 DAY=$2
 DIR="$YEAR/$(printf "%02d" "$DAY")"
 
-mkdir "$DIR"
+mkdir -p "$DIR"
 sed -e "s/\$DAY/$DAY/g" -e "s/\$YEAR/$YEAR/g" template.go > "$DIR/main.go"
 curl --fail "https://adventofcode.com/$YEAR/day/$DAY/input" --cookie "session=$SESSION" > "$DIR/input.txt"
 
