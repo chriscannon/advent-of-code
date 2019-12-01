@@ -18,10 +18,10 @@ func main() {
 	var totalWrapping, totalRibbon int
 	for i := range input {
 		sides := strings.Split(input[i], "x")
-		l, _ := strconv.Atoi(sides[0])
-		w, _ := strconv.Atoi(sides[1])
-		h, _ := strconv.Atoi(sides[2])
-		wrapping, ribbon := computeArea([]int{l, w, h})
+		l := convertDimension(sides[0])
+		w := convertDimension(sides[1])
+		h := convertDimension(sides[2])
+		wrapping, ribbon := computeWrappingRibbonLength([]int{l, w, h})
 		totalWrapping += wrapping
 		totalRibbon += ribbon
 	}
@@ -29,7 +29,15 @@ func main() {
 	fmt.Printf("Part 2 total feet of ribbon: %d\n", totalRibbon)
 }
 
-func computeArea(d []int) (int, int) {
+func convertDimension(size string) int {
+	dimension, err := strconv.Atoi(size)
+	if err != nil {
+		log.Fatalf("failed to convert string '%s' to int", size)
+	}
+	return dimension
+}
+
+func computeWrappingRibbonLength(d []int) (int, int) {
 	wrapping := (2 * d[0] * d[1]) + (2 * d[1] * d[2]) + (2 * d[0] * d[2])
 	sort.Ints(d)
 	wrapping += d[0] * d[1]
@@ -38,24 +46,22 @@ func computeArea(d []int) (int, int) {
 }
 
 func readInput() []string {
-	var inputFile *os.File
+	file := os.Stdin
 	if len(os.Args) == 2 {
-		var openErr error
-		inputFile, openErr = os.Open(os.Args[1])
-		if openErr != nil {
-			log.Panicln("error opening file: ", openErr)
+		var err error
+		file, err = os.Open(os.Args[1])
+		if err != nil {
+			log.Panicln("error opening file: ", err)
 		}
 		defer func() {
-			if err := inputFile.Close(); err != nil {
+			if err := file.Close(); err != nil {
 				log.Panicln("error closing file: ", err)
 			}
 		}()
-	} else {
-		inputFile = os.Stdin
 	}
 
 	var lines []string
-	scanner := bufio.NewScanner(inputFile)
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}

@@ -13,24 +13,22 @@ func main() {
 }
 
 func readInput() []string {
-	var inputFile *os.File
+	file := os.Stdin
 	if len(os.Args) == 2 {
-		var openErr error
-		inputFile, openErr = os.Open(os.Args[1])
-		if openErr != nil {
-			log.Panicln("error opening file: ", openErr)
+		var err error
+		file, err = os.Open(os.Args[1])
+		if err != nil {
+			log.Panicln("error opening file: ", err)
 		}
 		defer func() {
-			if err := inputFile.Close(); err != nil {
+			if err := file.Close(); err != nil {
 				log.Panicln("error closing file: ", err)
 			}
 		}()
-	} else {
-		inputFile = os.Stdin
 	}
 
 	var lines []string
-	scanner := bufio.NewScanner(inputFile)
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
