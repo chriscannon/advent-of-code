@@ -59,8 +59,7 @@ func ReadUint64Slice(split bufio.SplitFunc) ([]uint64, error) {
 	return inputs, nil
 }
 
-// SplitAt returns a
-// bufio.SplitFunc closure, splitting at a substring
+// SplitAt returns a bufio.SplitFunc closure, splitting at a substring
 // scanner.Split(SplitAt(','))
 // https://stackoverflow.com/a/51127669
 // https://golang.org/src/bufio/scan.go#L345

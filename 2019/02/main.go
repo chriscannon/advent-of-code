@@ -33,12 +33,12 @@ func main() {
 	fmt.Println("Part 2: ", 100*noun+verb)
 }
 
-func exec(originalInstructions []uint64, input1, input2 uint64) uint64 {
+func exec(originalInstructions []uint64, noun, verb uint64) uint64 {
 	instructions := make([]uint64, len(originalInstructions))
 	copy(instructions, originalInstructions)
 
-	instructions[1] = input1
-	instructions[2] = input2
+	instructions[1] = noun
+	instructions[2] = verb
 loop:
 	for i := 0; i < len(instructions); i += 4 {
 		switch instructions[i] {
