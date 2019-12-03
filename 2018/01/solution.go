@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 )
@@ -14,11 +15,15 @@ func main() {
 	}
 
 	file, err := os.Open(os.Args[1])
-	defer file.Close()
-
 	if err != nil {
 		panic(err)
 	}
+
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			log.Fatalln("failed to close file: ", closeErr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(file)
 	var currentFrequency int64

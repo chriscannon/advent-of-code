@@ -36,7 +36,7 @@ func readInput(fileName string) []string {
 		log.Panicln("error opening file: ", fileErr)
 	}
 
-	defer func(){
+	defer func() {
 		if err := file.Close(); err != nil {
 			log.Panicln("error closing file: ", err)
 		}

@@ -37,12 +37,12 @@ func convertDimension(size string) int {
 	return dimension
 }
 
-func computeWrappingRibbonLength(d []int) (int, int) {
-	wrapping := (2 * d[0] * d[1]) + (2 * d[1] * d[2]) + (2 * d[0] * d[2])
+func computeWrappingRibbonLength(d []int) (wrapping, ribbon int) {
+	wrapping = (2 * d[0] * d[1]) + (2 * d[1] * d[2]) + (2 * d[0] * d[2])
 	sort.Ints(d)
 	wrapping += d[0] * d[1]
-	ribbon := (d[0] * 2) + (d[1] * 2) + (d[0] * d[1] * d[2])
-	return wrapping, ribbon
+	ribbon = (d[0] * 2) + (d[1] * 2) + (d[0] * d[1] * d[2])
+	return
 }
 
 func readInput() []string {
