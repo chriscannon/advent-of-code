@@ -13,3 +13,19 @@ when an error occurs `log.Panic` is a good choice because it unwinds the program
 ## 2019
 ### Day 1
 * By default go's `/` operator does floor division.
+
+### Day 2
+* To start a go module run `go mod init <MODULE_NAME>`.
+* Go does not check for overflow (e.g., uint's can overflow) so be careful.
+* Use the built-in `copy` command to copy slices.
+* To break a for loop inside a switch use a label like so:
+```go
+loop:
+for i := range input {
+    switch i {
+    default:
+        break loop
+    }
+}
+```
+* To set a custom split character on a `scanner` create a `bufio.SplitFunc` and set it using `scanner.Split()`.
