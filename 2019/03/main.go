@@ -58,5 +58,4 @@ func main() {
 	}
 
 	fmt.Println("Part 1:", minManhattan)
-	// Too high 13418
 }
