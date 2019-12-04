@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func getInputFile() *os.File {
@@ -29,6 +30,29 @@ func closeFile(file *os.File) {
 	if err := file.Close(); err != nil {
 		log.Fatalln("failed to close file: ", err)
 	}
+}
+
+// ReadStringSliceWithFields
+func ReadStringSliceWithFields(sep string) ([][]string, error) {
+	file := getInputFile()
+	defer closeFile(file)
+	scanner := bufio.NewScanner(file)
+
+	if sep == "" {
+		return nil, fmt.Errorf("empty separator")
+	}
+
+	var inputs [][]string
+	for scanner.Scan() {
+		fields := strings.Split(scanner.Text(), sep)
+		inputs = append(inputs, fields)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("failed to scan input: %w", err)
+	}
+
+	return inputs, nil
 }
 
 // ReadUint64Slice scans the input file and parses it into a slice of uint64s.  If split is
