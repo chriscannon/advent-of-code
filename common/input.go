@@ -55,6 +55,34 @@ func ReadStringSliceWithFields(sep string) ([][]string, error) {
 	return inputs, nil
 }
 
+// ReadIntSlice scans the input file and parses it into a slice of intss.  If split is
+// nil, each number is separated by a newline.  Otherwise, the input is split with that function.
+func ReadIntSlice(split bufio.SplitFunc) ([]int, error) {
+	file := getInputFile()
+	defer closeFile(file)
+	scanner := bufio.NewScanner(file)
+
+	if split != nil {
+		scanner.Split(split)
+	}
+
+	var inputs []int
+	for scanner.Scan() {
+		value, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert value to int: %w", err)
+		}
+
+		inputs = append(inputs, value)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("failed to scan input: %w", err)
+	}
+
+	return inputs, nil
+}
+
 // ReadUint64Slice scans the input file and parses it into a slice of uint64s.  If split is
 // nil, each number is separated by a newline.  Otherwise, the input is split with that function.
 func ReadUint64Slice(split bufio.SplitFunc) ([]uint64, error) {
