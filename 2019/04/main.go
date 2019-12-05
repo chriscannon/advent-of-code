@@ -5,7 +5,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 
 	"github.com/chriscannon/advent-of-code/common"
 )
@@ -19,10 +18,9 @@ func main() {
 	var atLeastTwoTotal, exactlyTwoTotal int
 	for i := input[0]; i < input[1]+1; i++ {
 		digitCount := make(map[int]int)
-		var digit, previousDigit int
+		var previousDigit int
 		var notIncreasing bool
-		for j := 5; j > -1; j-- {
-			digit = (i / int(math.Pow(10, float64(j)))) % 10
+		for _, digit := range common.GetDigits(i, 6) {
 			if digit < previousDigit {
 				notIncreasing = true
 				break
@@ -44,6 +42,9 @@ func main() {
 
 			if count >= 2 {
 				found = true
+				if alreadyFoundTwo {
+					break
+				}
 			}
 		}
 

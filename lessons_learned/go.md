@@ -29,3 +29,31 @@ for i := range input {
 }
 ```
 * To set a custom split character on a `scanner` create a `bufio.SplitFunc` and set it using `scanner.Split()`.
+
+### Day 3
+* Golang has no absolute function for ints. You have to write your own like this:
+```go
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+```
+* If you want to store multiple values as a key in a map you have to first create a struct which holds those values and
+then set that new struct as the key.
+
+### Day 4
+* To reference a capture group *inside* a regular expression you can use `\NUM_CAPTURE_GROUP` where the number corresponds
+to the position of the capture group. For example, if you wanted to match two digits that are the same your regular expression
+would look like `(\d)\1` which says capture any digit and then match that same digit you captured on next to it.
+* If you want to iterate over the digits of any number instead of casting to a string and iterating each character you can do 
+so with division and modulus like so:
+```go
+num := 123456789
+n := 9 // the length of num
+for i := n - 1; i >= 0; i-- {
+	denominator := int(math.Pow(10, float64(i)))
+	digit := (num/denominator)%10
+}
+```
