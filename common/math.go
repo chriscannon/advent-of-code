@@ -2,7 +2,6 @@ package common
 
 import (
 	"log"
-	"math"
 )
 
 // GetDigits takes an int (num) with length (n) as input and returns
@@ -10,7 +9,7 @@ import (
 func GetDigits(num, n int) []int {
 	var digits []int
 	for i := n - 1; i >= 0; i-- {
-		denominator := int(math.Pow(10, float64(i)))
+		denominator := Pow(10, i)
 		digits = append(digits, (num/denominator)%10)
 	}
 	return digits
@@ -27,4 +26,19 @@ func Itob(i int) bool {
 	}
 
 	return false
+}
+
+// Pow computes a**b using binary powering algorithm.
+// See Donald Knuth, The Art of Computer Programming, Volume 2, Section 4.6.3
+// Source: https://groups.google.com/d/msg/golang-nuts/PnLnr4bc9Wo/z9ZGv2DYxXoJ
+func Pow(a, b int) int {
+	p := 1
+	for b > 0 {
+		if b&1 != 0 {
+			p *= a
+		}
+		b >>= 1
+		a *= a
+	}
+	return p
 }
