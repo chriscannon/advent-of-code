@@ -25,7 +25,7 @@ func main() {
 				notIncreasing = true
 				break
 			}
-			digitCount[digit] += 1
+			digitCount[digit]++
 			previousDigit = digit
 		}
 

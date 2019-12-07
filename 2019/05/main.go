@@ -95,15 +95,14 @@ func getOpCode(digits []int) int {
 	opcode := digits[n-1]
 
 	if len(digits) >= 2 {
-		opcode = digits[n-2] * 10 + opcode
+		opcode = digits[n-2]*10 + opcode
 	}
 
 	return opcode
 }
 
-func getParamModes(digits []int) (bool, bool) {
+func getParamModes(digits []int) (param1Mode, param2Mode bool) {
 	n := len(digits)
-	var param1Mode, param2Mode bool
 	switch n {
 	case 4:
 		param2Mode = common.Itob(digits[0])
@@ -116,5 +115,5 @@ func getParamModes(digits []int) (bool, bool) {
 		log.Fatalln("n is greater than 4: ", n)
 	}
 
-	return param1Mode, param2Mode
+	return
 }

@@ -13,7 +13,7 @@ type XY struct {
 
 // Coordinate
 type Coordinate struct {
-	X, Y    int
+	X, Y       int
 	VisitedIDs map[int]bool
 }
 
@@ -21,8 +21,8 @@ func newCoordinate(x, y, id int) Coordinate {
 	visited := make(map[int]bool)
 	visited[id] = true
 	return Coordinate{
-		X:       x,
-		Y:       y,
+		X:          x,
+		Y:          y,
 		VisitedIDs: visited,
 	}
 }
@@ -40,19 +40,19 @@ func NewMatrix() Matrix {
 
 // Print
 func (m *Matrix) Print() {
-	for y := m.MaxY + 1; y > m.MinY - 1; y-- {
+	for y := m.MaxY + 1; y > m.MinY-1; y-- {
 		var line []string
-		for x := m.MinX - 1; x < m.MaxX + 1; x++ {
+		for x := m.MinX - 1; x < m.MaxX+1; x++ {
 			if x == 0 && y == 0 {
 				line = append(line, "C")
 				continue
 			}
-			xy := XY{X:x, Y: y}
+			xy := XY{X: x, Y: y}
 			val, ok := m.Data[xy]
 			if !ok {
 				line = append(line, ".")
 			} else if len(val.VisitedIDs) == 1 {
-				for k, _ := range val.VisitedIDs {
+				for k := range val.VisitedIDs {
 					line = append(line, strconv.Itoa(k))
 				}
 			} else {
@@ -104,7 +104,7 @@ func (m *Matrix) VisitedNTimes(n int) []XY {
 }
 
 func ComputeManhattanDistance(x1, y1, x2, y2 int) int {
-	return Abs(x1 - x2) + Abs(y1 - y2)
+	return Abs(x1-x2) + Abs(y1-y2)
 }
 
 func Abs(x int) int {
