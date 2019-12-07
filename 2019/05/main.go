@@ -31,59 +31,43 @@ loop:
 	for {
 		n := len(strconv.Itoa(instructions[ip]))
 		digits := common.GetDigits(instructions[ip], n)
-		opcode := digits[n-1]
-
-		if len(digits) >= 2 {
-			opcode = (digits[n-2] * 10) + opcode
-		}
-
-		var param1Mode, param2Mode bool
-		switch n {
-		case 4:
-			param2Mode = common.Itob(digits[0])
-			param1Mode = common.Itob(digits[1])
-		case 3:
-			param1Mode = common.Itob(digits[0])
-		}
-
-		if n > 4 {
-			log.Fatalln("n is greater than 4: ", n)
-		}
+		opcode := getOpCode(digits)
+		param1Mode, param2Mode := getParamModes(digits)
 
 		switch opcode {
 		case 1:
-			instructions[instructions[ip+3]] = getValueOrLiteral(instructions, param1Mode, ip+1) + getValueOrLiteral(instructions, param2Mode, ip+2)
+			instructions[instructions[ip+3]] = getVal(instructions, param1Mode, ip+1) + getVal(instructions, param2Mode, ip+2)
 			ip += 4
 		case 2:
-			instructions[instructions[ip+3]] = getValueOrLiteral(instructions, param1Mode, ip+1) * getValueOrLiteral(instructions, param2Mode, ip+2)
+			instructions[instructions[ip+3]] = getVal(instructions, param1Mode, ip+1) * getVal(instructions, param2Mode, ip+2)
 			ip += 4
 		case 3:
 			instructions[instructions[ip+1]] = input
 			ip += 2
 		case 4:
-			output = getValueOrLiteral(instructions, param1Mode, ip+1)
+			output = getVal(instructions, param1Mode, ip+1)
 			ip += 2
 		case 5:
-			if getValueOrLiteral(instructions, param1Mode, ip+1) != 0 {
-				ip = getValueOrLiteral(instructions, param2Mode, ip+2)
+			if getVal(instructions, param1Mode, ip+1) != 0 {
+				ip = getVal(instructions, param2Mode, ip+2)
 			} else {
 				ip += 3
 			}
 		case 6:
-			if getValueOrLiteral(instructions, param1Mode, ip+1) == 0 {
-				ip = getValueOrLiteral(instructions, param2Mode, ip+2)
+			if getVal(instructions, param1Mode, ip+1) == 0 {
+				ip = getVal(instructions, param2Mode, ip+2)
 			} else {
 				ip += 3
 			}
 		case 7:
-			if getValueOrLiteral(instructions, param1Mode, ip+1) < getValueOrLiteral(instructions, param2Mode, ip+2) {
+			if getVal(instructions, param1Mode, ip+1) < getVal(instructions, param2Mode, ip+2) {
 				instructions[instructions[ip+3]] = 1
 			} else {
 				instructions[instructions[ip+3]] = 0
 			}
 			ip += 4
 		case 8:
-			if getValueOrLiteral(instructions, param1Mode, ip+1) == getValueOrLiteral(instructions, param2Mode, ip+2) {
+			if getVal(instructions, param1Mode, ip+1) == getVal(instructions, param2Mode, ip+2) {
 				instructions[instructions[ip+3]] = 1
 			} else {
 				instructions[instructions[ip+3]] = 0
@@ -98,10 +82,39 @@ loop:
 	return output
 }
 
-func getValueOrLiteral(instructions []int, immediate bool, ip int) int {
+func getVal(instructions []int, immediate bool, ip int) int {
 	if immediate {
 		return instructions[ip]
 	}
 
 	return instructions[instructions[ip]]
+}
+
+func getOpCode(digits []int) int {
+	n := len(digits)
+	opcode := digits[n-1]
+
+	if len(digits) >= 2 {
+		opcode = digits[n-2] * 10 + opcode
+	}
+
+	return opcode
+}
+
+func getParamModes(digits []int) (bool, bool) {
+	n := len(digits)
+	var param1Mode, param2Mode bool
+	switch n {
+	case 4:
+		param2Mode = common.Itob(digits[0])
+		param1Mode = common.Itob(digits[1])
+	case 3:
+		param1Mode = common.Itob(digits[0])
+	}
+
+	if n > 4 {
+		log.Fatalln("n is greater than 4: ", n)
+	}
+
+	return param1Mode, param2Mode
 }
