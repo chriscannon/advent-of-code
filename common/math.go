@@ -1,6 +1,9 @@
 package common
 
-import "math"
+import (
+	"log"
+	"math"
+)
 
 // GetDigits takes an int (num) with length (n) as input and returns
 // a slice of ints for each digit in the number.
@@ -11,4 +14,17 @@ func GetDigits(num, n int) []int {
 		digits = append(digits, (num/denominator)%10)
 	}
 	return digits
+}
+
+// Itob takes an int and converts it to a boolean
+func Itob(i int) bool {
+	if i != 0 && i != 1 {
+		log.Fatalln("unknown integer to convert to boolean: ", i)
+	}
+
+	if i == 1 {
+		return true
+	}
+
+	return false
 }
