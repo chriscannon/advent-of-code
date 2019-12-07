@@ -1,5 +1,5 @@
 #!/bin/bash
-# Example command: ./start_day.sh 2019 01
+# Example command: ./start_day.sh 2019 1
 set -e
 if [ -z "$SESSION" ]
 then
