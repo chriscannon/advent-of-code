@@ -20,6 +20,7 @@ type Coordinate struct {
 func newCoordinate(x, y, id int) Coordinate {
 	visited := make(map[int]bool)
 	visited[id] = true
+
 	return Coordinate{
 		X:          x,
 		Y:          y,
@@ -31,11 +32,12 @@ func newCoordinate(x, y, id int) Coordinate {
 type Matrix struct {
 	Data                   map[XY]Coordinate
 	MaxX, MinX, MaxY, MinY int
+	Steps                  map[XY]map[int]int
 }
 
 // NewMatrix
 func NewMatrix() Matrix {
-	return Matrix{Data: make(map[XY]Coordinate)}
+	return Matrix{Data: make(map[XY]Coordinate), Steps: make(map[XY]map[int]int)}
 }
 
 // Print
@@ -63,13 +65,26 @@ func (m *Matrix) Print() {
 	}
 }
 
-func (m *Matrix) AddCoordinate(x, y, id int) {
+func (m *Matrix) AddCoordinate(x, y, id, step int) {
 	xy := XY{X: x, Y: y}
 	val, ok := m.Data[xy]
 	if !ok {
 		m.Data[xy] = newCoordinate(x, y, id)
 	} else {
 		val.VisitedIDs[id] = true
+	}
+
+	ids, ok := m.Steps[xy]
+	if !ok {
+		// If we haven't seen this coordinate before add the ID's steps
+		steps := make(map[int]int)
+		steps[id] = step
+		m.Steps[xy] = steps
+	} else if _, ok := ids[id]; !ok {
+		// Only add the steps for this ID if we haven't seen it before.
+		// We don't add the steps after the first observation because we know those steps
+		// will be greater than the previous step and we are only interested in the minimum amount of steps.
+		ids[id] = step
 	}
 
 	if x > m.MaxX {

@@ -20,8 +20,8 @@ func main() {
 
 	matrix := common.NewMatrix()
 	for i := range input {
-		var x, y int
-		matrix.AddCoordinate(0, 0, i)
+		var x, y, steps int
+		matrix.AddCoordinate(0, 0, i, steps)
 		for j := range input[i] {
 			var xDelta, yDelta int
 			switch input[i][j][0] {
@@ -41,7 +41,8 @@ func main() {
 			for movement != 0 {
 				x += xDelta
 				y += yDelta
-				matrix.AddCoordinate(x, y, i)
+				steps++
+				matrix.AddCoordinate(x, y, i, steps)
 				movement--
 			}
 		}
@@ -49,13 +50,21 @@ func main() {
 
 	visited := matrix.VisitedNTimes(2)
 	minManhattan := math.MaxInt32
+	minSteps := math.MaxInt32
 	for i := range visited {
 		manhattan := common.ComputeManhattanDistance(0, 0, visited[i].X, visited[i].Y)
 
 		if manhattan < minManhattan {
 			minManhattan = manhattan
 		}
+
+		// Get the minimum steps at each x, y coordinate for line IDs 0 and 1
+		currentSteps := matrix.Steps[visited[i]][0] + matrix.Steps[visited[i]][1]
+		if currentSteps < minSteps {
+			minSteps = currentSteps
+		}
 	}
 
-	fmt.Println("Part 1:", minManhattan)
+	fmt.Println("Part 1: ", minManhattan)
+	fmt.Println("Part 2: ", minSteps)
 }
