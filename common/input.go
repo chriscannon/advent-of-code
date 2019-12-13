@@ -142,3 +142,28 @@ func dropNewline(data []byte) []byte {
 	}
 	return data
 }
+
+// ReadDigitsIntSlice
+func ReadDigitsIntSlice() ([]int, error) {
+	file := getInputFile()
+	defer closeFile(file)
+	scanner := bufio.NewScanner(file)
+
+	var inputs []int
+	for scanner.Scan() {
+		line := scanner.Text()
+		for i := range line {
+			value, err := strconv.Atoi(string(line[i]))
+			if err != nil {
+				return nil, fmt.Errorf("failed to convert value to uint64: %w", err)
+			}
+			inputs = append(inputs, value)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("failed to scan input: %w", err)
+	}
+
+	return inputs, nil
+}
