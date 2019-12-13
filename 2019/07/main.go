@@ -80,8 +80,6 @@ func runAmplifier(instructions, phasesSetting []int, results chan int, isFeedbac
 	}
 
 	amp1Input <- 0
-
-	return
 }
 
 func exec(originalInstructions []int, ampID, phase int, input, output, final chan int) {

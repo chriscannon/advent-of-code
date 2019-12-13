@@ -20,8 +20,7 @@ func main() {
 	layers := make(map[int]common.Matrix)
 
 	for i := 0; i < len(input); i += width * height {
-		index := i
-		for j := 0; j < width + height; j ++ {
+		for j := 0; j < width+height; j++ {
 
 		}
 		for y := 0; y < height; y++ {
