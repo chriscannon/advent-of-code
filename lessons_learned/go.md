@@ -57,3 +57,12 @@ for i := n - 1; i >= 0; i-- {
 	digit := (num/denominator)%10
 }
 ```
+
+### Day 6
+* If you need to work your way from the leaf of a tree to the root build the tree in reverse and do a depth-first search.
+* To find the parent of two leaf nodes build a reverse tree, get the path from each leaf to the root, then traverse each path
+until you find a common node ID which is the common parent of both leaf nodes.
+
+### Day 7
+* Buffered channels are a good way to ensure that go routines using a channel do not have to be in exact lock step
+for reads/writes. Using a buffered channel of size 1 is a good place to start.

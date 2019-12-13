@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/chriscannon/advent-of-code/common"
+	"github.com/dbyio/heappermutations"
 )
 
 func main() {
@@ -16,19 +17,15 @@ func main() {
 		log.Fatalln("failed to read input: ", err)
 	}
 
-	// My permutation generator can't handle 0s so I increment the phase IDs
-	// by 1 and then subtract by 1 when I execute the amplifier.
-	phases := []int{1, 2, 3, 4, 5}
-	permutations := common.HeapPermutation(phases, 5)
-	results := make(chan int)
-
+	permutations := heappermutations.Ints([]int{0, 1, 2, 3, 4})
+	results := make(chan int, 1)
 	for i := range permutations {
 		runAmplifier(instructions, permutations[i], results, false)
 	}
 
-	maxThrust := 0
+	var maxThrust, output int
 	for range permutations {
-		output := <-results
+		output = <-results
 		if output > maxThrust {
 			maxThrust = output
 		}
@@ -36,16 +33,14 @@ func main() {
 
 	fmt.Println("Part 1: ", maxThrust)
 
-	phases = []int{6, 7, 8, 9, 10}
-	permutations = common.HeapPermutation(phases, 5)
-
+	permutations = heappermutations.Ints([]int{5, 6, 7, 8, 9})
 	for i := range permutations {
 		runAmplifier(instructions, permutations[i], results, true)
 	}
 
 	maxThrust = 0
 	for range permutations {
-		output := <-results
+		output = <-results
 		if output > maxThrust {
 			maxThrust = output
 		}
@@ -56,33 +51,33 @@ func main() {
 
 func runAmplifier(instructions, phasesSetting []int, results chan int, isFeedback bool) {
 	// Amp 1
-	amp1Input := make(chan int)
-	amp1Output := make(chan int)
-	go exec(instructions, 1, phasesSetting[0]-1, amp1Input, amp1Output, nil)
+	amp1Input := make(chan int, 1)
+	amp1Output := make(chan int, 1)
+	go exec(instructions, phasesSetting[0], amp1Input, amp1Output, nil)
 
 	// Amp 2
-	amp2Output := make(chan int)
-	go exec(instructions, 2, phasesSetting[1]-1, amp1Output, amp2Output, nil)
+	amp2Output := make(chan int, 1)
+	go exec(instructions, phasesSetting[1], amp1Output, amp2Output, nil)
 
 	// Amp 3
-	amp3Output := make(chan int)
-	go exec(instructions, 3, phasesSetting[2]-1, amp2Output, amp3Output, nil)
+	amp3Output := make(chan int, 1)
+	go exec(instructions, phasesSetting[2], amp2Output, amp3Output, nil)
 
 	// Amp 4
-	amp4Output := make(chan int)
-	go exec(instructions, 4, phasesSetting[3]-1, amp3Output, amp4Output, nil)
+	amp4Output := make(chan int, 1)
+	go exec(instructions, phasesSetting[3], amp3Output, amp4Output, nil)
 
 	// Amp 5
 	if isFeedback {
-		go exec(instructions, 5, phasesSetting[4]-1, amp4Output, amp1Input, results)
+		go exec(instructions, phasesSetting[4], amp4Output, amp1Input, results)
 	} else {
-		go exec(instructions, 5, phasesSetting[4]-1, amp4Output, results, nil)
+		go exec(instructions, phasesSetting[4], amp4Output, results, nil)
 	}
 
 	amp1Input <- 0
 }
 
-func exec(originalInstructions []int, ampID, phase int, input, output, final chan int) {
+func exec(originalInstructions []int, phase int, input, output, final chan int) {
 	instructions := make([]int, len(originalInstructions))
 	copy(instructions, originalInstructions)
 
@@ -143,14 +138,6 @@ func exec(originalInstructions []int, ampID, phase int, input, output, final cha
 			if final != nil {
 				final <- finalOutput
 			}
-
-			// Since we're using unbuffered channels Amp 1 needs to do
-			// one last receive from Amp 5 in order for Amp 5 to get to
-			// the halt command.
-			if ampID == 1 {
-				<-input
-			}
-
 			return
 		default:
 			log.Fatalln("unknown command: ", instructions[ip])
