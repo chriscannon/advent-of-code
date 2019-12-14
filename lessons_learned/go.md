@@ -66,3 +66,15 @@ until you find a common node ID which is the common parent of both leaf nodes.
 ### Day 7
 * Buffered channels are a good way to ensure that go routines using a channel do not have to be in exact lock step
 for reads/writes. Using a buffered channel of size 1 is a good place to start.
+
+### Day 8
+* If you want to create a set in Go you have to use a `map`. If memory constraints aren't tight you can make a
+`map[<KEY>]bool`. However, if you want to minimize the memory usage of your set as much as possible use
+a `struct{}` like so:
+```go
+type void struct{}
+var member void
+
+set := make(map[string]void)
+set["Foo"] = member
+```

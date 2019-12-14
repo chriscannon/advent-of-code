@@ -10,51 +10,69 @@ import (
 	"github.com/chriscannon/advent-of-code/common"
 )
 
+const (
+	emptySpace  = "   "
+	markedSpace = " X "
+)
+
+// Point is an X, Y coordinate
+type Point struct {
+	X, Y int
+}
+
 func main() {
 	input, err := common.ReadDigitsIntSlice()
 	if err != nil {
 		log.Fatalln("failed to read input: ", err)
 	}
-	width, height := 3, 2
+	width, height := 25, 6
+	layerDataCounts := make(map[int]map[int]int)
+	stackedLayers := make(map[Point]int)
 
-	layers := make(map[int]common.Matrix)
-
+	var index int
+	layerID := 1
 	for i := 0; i < len(input); i += width * height {
-		for j := 0; j < width+height; j++ {
-
-		}
+		layerDataCounts[layerID] = make(map[int]int)
 		for y := 0; y < height; y++ {
 			for x := 0; x < width; x++ {
-				layerID := i
-				val := input[i+y+x]
-				fmt.Println(val)
-				if matrix, ok := layers[layerID]; !ok {
-					m := common.NewMatrix()
-					m.AddCoordinate(x, y, input[i+y+x], 0)
-					layers[layerID] = m
-				} else {
-					matrix.AddCoordinate(x, y, input[i+y+x], 0)
+				data := input[index]
+				layerDataCounts[layerID][data]++
+
+				p := Point{X: x, Y: y}
+				if _, ok := stackedLayers[p]; !ok && (data == 1 || data == 0) {
+					stackedLayers[p] = data
 				}
+				index++
 			}
 		}
+		layerID++
 	}
 
-	minZeros := math.MaxInt32
 	var onesTimesTwos int
-	for _, matrix := range layers {
-		counts := make(map[int]int)
-		for _, coord := range matrix.Data {
-			for id := range coord.VisitedIDs {
-				counts[id]++
-			}
-		}
+	minZeros := math.MaxInt32
 
-		if counts[0] < minZeros {
-			onesTimesTwos = counts[1] * counts[2]
-			minZeros = counts[0]
+	for _, layer := range layerDataCounts {
+		if layer[0] < minZeros {
+			minZeros = layer[0]
+			onesTimesTwos = layer[1] * layer[2]
 		}
 	}
 
 	fmt.Println("Part 1: ", onesTimesTwos)
-	// 100 too low
+	fmt.Println("Part 2:")
+
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			if data, ok := stackedLayers[Point{X: x, Y: y}]; ok {
+				if data == 1 {
+					fmt.Printf(markedSpace)
+				} else {
+					fmt.Printf(emptySpace)
+				}
+			} else {
+				fmt.Printf(emptySpace)
+			}
+		}
+		fmt.Println()
+	}
 }
