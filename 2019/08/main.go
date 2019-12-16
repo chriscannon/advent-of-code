@@ -65,12 +65,12 @@ func main() {
 		for x := 0; x < width; x++ {
 			if data, ok := stackedLayers[Point{X: x, Y: y}]; ok {
 				if data == 1 {
-					fmt.Printf(markedSpace)
+					fmt.Print(markedSpace)
 				} else {
-					fmt.Printf(emptySpace)
+					fmt.Print(emptySpace)
 				}
 			} else {
-				fmt.Printf(emptySpace)
+				fmt.Print(emptySpace)
 			}
 		}
 		fmt.Println()
