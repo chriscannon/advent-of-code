@@ -12,11 +12,23 @@ import (
 )
 
 type paramMode int
+type opCode int
 
 const (
 	position paramMode = iota
 	immediate
 	relative
+)
+const (
+	add opCode = iota + 1
+	multiply
+	writeInput
+	writeOutput
+	jumpIfTrue
+	jumpIfFalse
+	lessThan
+	equals
+	increaseBase
 )
 
 func main() {
@@ -39,53 +51,53 @@ func exec(originalInstructions []int, input, output chan int) {
 	instructions := make([]int, math.MaxInt32)
 	copy(instructions, originalInstructions)
 
-	var ip, relativeBase int
+	var ip, base int
 	for {
 		n := len(strconv.Itoa(instructions[ip]))
 		digits := common.GetDigits(instructions[ip], n)
 		param1Mode, param2Mode, param3Mode := getParamModes(digits)
 
 		switch getOpCode(digits) {
-		case 1:
-			instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = getVal(instructions, param1Mode, ip+1, relativeBase) + getVal(instructions, param2Mode, ip+2, relativeBase)
+		case add:
+			instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = getVal(instructions, param1Mode, ip+1, base) + getVal(instructions, param2Mode, ip+2, base)
 			ip += 4
-		case 2:
-			instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = getVal(instructions, param1Mode, ip+1, relativeBase) * getVal(instructions, param2Mode, ip+2, relativeBase)
+		case multiply:
+			instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = getVal(instructions, param1Mode, ip+1, base) * getVal(instructions, param2Mode, ip+2, base)
 			ip += 4
-		case 3:
-			instructions[getWriteAddr(instructions, param1Mode, ip+1, relativeBase)] = <-input
+		case writeInput:
+			instructions[getWriteAddr(instructions, param1Mode, ip+1, base)] = <-input
 			ip += 2
-		case 4:
-			output <- getVal(instructions, param1Mode, ip+1, relativeBase)
+		case writeOutput:
+			output <- getVal(instructions, param1Mode, ip+1, base)
 			ip += 2
-		case 5:
-			if getVal(instructions, param1Mode, ip+1, relativeBase) != 0 {
-				ip = getVal(instructions, param2Mode, ip+2, relativeBase)
+		case jumpIfTrue:
+			if getVal(instructions, param1Mode, ip+1, base) != 0 {
+				ip = getVal(instructions, param2Mode, ip+2, base)
 			} else {
 				ip += 3
 			}
-		case 6:
-			if getVal(instructions, param1Mode, ip+1, relativeBase) == 0 {
-				ip = getVal(instructions, param2Mode, ip+2, relativeBase)
+		case jumpIfFalse:
+			if getVal(instructions, param1Mode, ip+1, base) == 0 {
+				ip = getVal(instructions, param2Mode, ip+2, base)
 			} else {
 				ip += 3
 			}
-		case 7:
-			if getVal(instructions, param1Mode, ip+1, relativeBase) < getVal(instructions, param2Mode, ip+2, relativeBase) {
-				instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = 1
+		case lessThan:
+			if getVal(instructions, param1Mode, ip+1, base) < getVal(instructions, param2Mode, ip+2, base) {
+				instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = 1
 			} else {
-				instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = 0
+				instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = 0
 			}
 			ip += 4
-		case 8:
-			if getVal(instructions, param1Mode, ip+1, relativeBase) == getVal(instructions, param2Mode, ip+2, relativeBase) {
-				instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = 1
+		case equals:
+			if getVal(instructions, param1Mode, ip+1, base) == getVal(instructions, param2Mode, ip+2, base) {
+				instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = 1
 			} else {
-				instructions[getWriteAddr(instructions, param3Mode, ip+3, relativeBase)] = 0
+				instructions[getWriteAddr(instructions, param3Mode, ip+3, base)] = 0
 			}
 			ip += 4
-		case 9:
-			relativeBase += getVal(instructions, param1Mode, ip+1, relativeBase)
+		case increaseBase:
+			base += getVal(instructions, param1Mode, ip+1, base)
 			ip += 2
 		case 99:
 			return
@@ -95,41 +107,41 @@ func exec(originalInstructions []int, input, output chan int) {
 	}
 }
 
-func getVal(instructions []int, mode paramMode, ip, relativeBase int) int {
+func getVal(instructions []int, mode paramMode, ip, base int) int {
 	switch mode {
 	case immediate:
 		return instructions[ip]
 	case position:
 		return instructions[instructions[ip]]
 	case relative:
-		return instructions[relativeBase+instructions[ip]]
+		return instructions[base+instructions[ip]]
 	default:
 		log.Fatal("unknown mode: ", mode)
 	}
 	return -1
 }
 
-func getWriteAddr(instructions []int, mode paramMode, ip, relativeBase int) int {
+func getWriteAddr(instructions []int, mode paramMode, ip, base int) int {
 	switch mode {
 	case position:
 		return instructions[ip]
 	case relative:
-		return instructions[ip] + relativeBase
+		return instructions[ip] + base
 	default:
 		log.Fatal("unknown mode: ", mode)
 	}
 	return -1
 }
 
-func getOpCode(digits []int) int {
+func getOpCode(digits []int) opCode {
 	n := len(digits)
-	opCode := digits[n-1]
+	code := digits[n-1]
 
 	if len(digits) >= 2 {
-		opCode = digits[n-2]*10 + opCode
+		code = digits[n-2]*10 + code
 	}
 
-	return opCode
+	return opCode(code)
 }
 
 func getParamModes(digits []int) (param1Mode, param2Mode, param3Mode paramMode) {
